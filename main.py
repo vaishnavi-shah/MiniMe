@@ -6,6 +6,10 @@ import random
 import wikipedia
 import webbrowser
 import pyjokes
+import pyautogui
+import psutil
+import time
+import winshell
 
 # Initialize the speech engine
 engine = pyttsx3.init('sapi5')
@@ -117,15 +121,15 @@ if __name__ == '__main__':
             npath2 = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
             os.startfile(npath2)
 
-        elif "play music" in order or "play song" in order:
-            speak("Playing music.")
-            music_dir = "C:\\Users\\Vaishnavi\\Music"
-            songs = os.listdir(music_dir)
-            if songs:
-                rd = random.choice(songs)
-                os.startfile(os.path.join(music_dir, rd))
-            else:
-                speak("I couldn't find any songs in your music folder.")
+        # elif "play music" in order or "play song" in order:
+        #     speak("Playing music.")
+        #     music_dir = "C:\\Users\\Vaishnavi\\Music"
+        #     songs = os.listdir(music_dir)
+        #     if songs:
+        #         rd = random.choice(songs)
+        #         os.startfile(os.path.join(music_dir, rd))
+        #     else:
+        #         speak("I couldn't find any songs in your music folder.")
 
         elif "wikipedia" in order or "search" in order:
             speak("Searching...")
@@ -251,19 +255,49 @@ if __name__ == '__main__':
             print(file.read())
             speak(file.read(6))
 
-        elif "joke" or "jokes" in order:
+        elif "joke" in order or "jokes" in order:
             speak(pyjokes.get_joke(language="en", category = "neutral"))
 
         elif "time" in order:
             strTime = datetime.datetime.now().strftime("%H:%M:%S")
             speak(f"Well the time is {strTime}")
 
+        elif "shutdown" in order or "turn off" in order:
+            speak("Shutting down your system. Make sure to save your work.")
+            os.system("shutdown /s /t 5")
+
+        elif "restart" in order:
+            speak("Restarting your system now.")
+            os.system("shutdown /r /t 5")
+
+        elif "log off" in order or "sign out" in order:
+            speak("Logging off your system.")
+            os.system("shutdown /l")
+
+        elif "hybernate" in order:
+            speak("Hybernating....")
+            os.system("shutdown / l")
+
+        elif "switch window" in order:
+            pyautogui.keyDown('alt')
+            pyautogui.press('tab')
+            time.sleep(1)
+            pyautogui.keyUp('alt')
+
+        elif "take a screenshot" in order or "screenshot this" in order:
+            speak("Please tell me the name for this file.")
+            name = takeCommand().lower()
+            if name == "none" or name.strip() == "":
+                name = "screenshot"
+            speak("Please hold the screen.")
+            time.sleep(3)
+            img = pyautogui.screenshot()
+            img.save(f"{name}.png")
+            speak("Screenshot captured successfully!")
+
+        elif "cpu status" in order:
+            usage = psutil.cpu_percent(interval=1)
+            speak(f"CPU usage is at {usage} percent.")
 
         else:
             speak("I didn't catch that. Could you please repeat?")
-
-
-
-
-
-
