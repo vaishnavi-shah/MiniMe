@@ -5,6 +5,7 @@ import os
 import random
 import wikipedia
 import webbrowser
+import pyjokes
 
 # Initialize the speech engine
 engine = pyttsx3.init('sapi5')
@@ -221,6 +222,42 @@ if __name__ == '__main__':
         elif "open spotify" in order:
             speak("Here you go to Spotify!")
             webbrowser.open("https://open.spotify.com/")
+
+        elif "where is" in order:
+            order = order.replace("where is","")
+            location = order
+            speak("Locating....")
+            speak(location)
+            webbrowser.open("https://www.google.co.in/maps/place/"+location+"")
+
+        elif "write a note" in order:
+            speak("What should i write ?")
+            note = takeCommand()
+            file = open("minime.txt","w")
+            speak("Should i include date and time as well?")
+            sn = takeCommand()
+            if "yes" in sn or "sure" in sn or "yeah" in sn:
+                strTime = datetime.datetime.now().strftime("%H:%M:%S")
+                file.write(strTime)
+                file.write(note)
+                speak("Done!")
+            else:
+                file.write(note)
+                speak("Done!")
+
+        elif "show note" in order:
+            speak("Showing notes")
+            file = open("minime.txt","r")
+            print(file.read())
+            speak(file.read(6))
+
+        elif "joke" or "jokes" in order:
+            speak(pyjokes.get_joke(language="en", category = "neutral"))
+
+        elif "time" in order:
+            strTime = datetime.datetime.now().strftime("%H:%M:%S")
+            speak(f"Well the time is {strTime}")
+
 
         else:
             speak("I didn't catch that. Could you please repeat?")
