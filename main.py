@@ -11,6 +11,9 @@ import psutil
 import time
 import winshell
 import sys
+import socket
+import imdb
+
 
 # Initialize the speech engine
 engine = pyttsx3.init('sapi5')
@@ -68,6 +71,41 @@ def wishMe():
     else:
         speak("Good Evening!")
     speak("I am your virtual assistant, Minime!")
+
+def movie():
+    moviesdb = imdb.IMDb()
+    speak("Please tell me the movie name")
+    text = takeCommand()
+
+    movies = moviesdb.search_movie(text)
+    speak("Searching for " + text)
+
+    if len(movies) == 0:
+        speak("No result found!")
+    else:
+        speak("I found these results:")
+
+        for movie in movies:
+            title = movie["title"]
+            year = movie.get("year", "Unknown")  # Handle cases where year might be missing
+            speak(f"{title} - {year}")
+
+            info = movie.getID()
+            movie_details = moviesdb.get_movie(info)
+
+            rating = movie_details.get("rating", "No rating available")  # Handle missing rating
+            plot = movie_details.get("plot outline", "No plot available")  # Handle missing plot
+
+            current_year = int(datetime.datetime.now().strftime("%Y"))
+
+            if isinstance(year, int) and year < current_year:
+                speak(f"{title} was released in {year} and has an IMDb rating of {rating}. The plot summary is: {plot}")
+            else:
+                speak(
+                    f"{title} will be released in {year} and has an IMDb rating of {rating}. The plot summary is: {plot}")
+
+            break  # Stop after the first match
+
 
 if __name__ == '__main__':
     wishMe()
@@ -313,6 +351,41 @@ if __name__ == '__main__':
             speak("Thank you for using me. Have a good day!")
             sys.exit()
 
+        elif "ip" in order:
+            host = socket.gethostname()  # Get the hostname
+            ip = socket.gethostbyname(host)  # Get the IP address of the hostname
+            speak("Your IP address is " + ip)
+
+        elif "bmi" in order:
+            speak("Please tell me your height in centimeters")
+            height = takeCommand()
+
+            speak("Please tell me your weight in kilograms")
+            weight = takeCommand()
+
+            try:
+                height = float(height) / 100  # Convert height to meters
+                weight = float(weight)  # Convert weight to float
+                BMI = weight / (height * height)  # BMI calculation
+
+                speak(f"Your Body Mass Index is {BMI:.2f}")
+
+                if BMI <= 16:
+                    speak("You are severely underweight")
+                elif BMI <= 18.5:
+                    speak("You are underweight")
+                elif BMI <= 25:
+                    speak("You are healthy")
+                elif BMI <= 30:
+                    speak("You are overweight")
+                else:
+                    speak("You are obese")
+
+            except ValueError:
+                speak("Invalid input. Please try again.")
+
+        elif "movie" in order:
+            movie()
 
         else:
             speak("I didn't catch that. Could you please repeat?")
