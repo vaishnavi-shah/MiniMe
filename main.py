@@ -10,6 +10,7 @@ import pyautogui
 import psutil
 import time
 import winshell
+import sys
 
 # Initialize the speech engine
 engine = pyttsx3.init('sapi5')
@@ -17,6 +18,8 @@ engine = pyttsx3.init('sapi5')
 # Set the voice (voices[1] usually refers to a female voice in Windows)
 voices = engine.getProperty('voices')
 engine.setProperty('voice', voices[0].id)
+from camera import*
+
 
 # Function to speak a fixed message
 def speak(audio):
@@ -298,6 +301,18 @@ if __name__ == '__main__':
         elif "cpu status" in order:
             usage = psutil.cpu_percent(interval=1)
             speak(f"CPU usage is at {usage} percent.")
+
+        elif "empty recycle bin" in order:
+            winshell.recycle_bin().empty(confirm = False, show_progress = False, sound = True)
+            speak("Recycle Bin recycled successfully!")
+
+        elif "camera" in order :
+            cam()
+
+        elif "exit" in order or "stop" in order or "quit" in order:
+            speak("Thank you for using me. Have a good day!")
+            sys.exit()
+
 
         else:
             speak("I didn't catch that. Could you please repeat?")
