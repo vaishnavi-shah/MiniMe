@@ -389,3 +389,5 @@ if __name__ == '__main__':
 
         else:
             speak("I didn't catch that. Could you please repeat?")
+
+print("I love Clifton so much!")
