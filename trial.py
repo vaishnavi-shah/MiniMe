@@ -72,7 +72,7 @@ def process_command(order):
         speak("Oh my God! Thank you so much, I love you too.")
         speak("Anything you want me to help you with?")
 
-    elif "will you be my girlfriend" in order or "will you be my valentine" in order or "you are my love" in order:
+    elif "will you be my boyfriend" in order or "will you be my valentine" in order or "you are my love" in order:
         speak("I am not sure about that. Aren't we besties?")
         speak("Our friendship is too unique to be ruined by love.")
 
@@ -278,8 +278,6 @@ def process_command(order):
         winshell.recycle_bin().empty(confirm = False, show_progress = False, sound = True)
         speak("Recycle Bin recycled successfully!")
 
-    elif "camera" in order :
-        cam()
 
     elif "exit" in order or "stop" in order or "quit" in order:
         speak("Thank you for using me. Have a good day!")
